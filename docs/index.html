@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>YouTube Bot – Workflow & Analytics Dashboard</title>
+  <meta name="description"
+    content="YouTube Bot helps creators with monitoring, scheduling, comment management, and analytics dashboards." />
+  <meta name="robots" content="index, follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://Appilot123.github.io/youtube-bot/" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/favicon-180.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="YouTube Bot – Workflow & Analytics Dashboard" />
+  <meta property="og:description"
+    content="YouTube Bot helps creators with monitoring, scheduling, comment management, and analytics dashboards." />
+  <meta property="og:url" content="https://Appilot123.github.io/youtube-bot/" />
+  <meta property="og:image" content="og-1200x630.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="YouTube Bot – Workflow & Analytics Dashboard" />
+  <meta name="twitter:description"
+    content="YouTube Bot helps creators with monitoring, scheduling, comment management, and analytics dashboards." />
+  <meta name="twitter:image" content="/og-1200x1200.jpg" />
+
+  <!-- Security / Privacy (prefer real HTTP headers in production) -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; font-src 'self' data:; base-uri 'self'; form-action 'self'" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <style>
+    /* ====== Minimal, accessible, mobile-first CSS (inline critical) ====== */
+    :root {
+      --bg: #0b0b0c;
+      --bg2: #111114;
+      --text: #e9e9ef;
+      --muted: #b8b8c6;
+      --brand: #ff0033;
+      --card: #141418;
+      --border: rgba(255, 255, 255, .08);
+      --ok: #12b886
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #ffffff;
+        --bg2: #f7f7fb;
+        --text: #121217;
+        --muted: #4b4b57;
+        --brand: #d7002f;
+        --card: #ffffff;
+        --border: rgba(0, 0, 0, .08);
+        --ok: #0a8f68
+      }
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+      line-height: 1.55;
+      background: var(--bg);
+      color: var(--text)
+    }
+
+    a {
+      color: var(--brand);
+      text-decoration: none
+    }
+
+    a:focus,
+    button:focus {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      backdrop-filter: saturate(1.4) blur(6px);
+      background: linear-gradient(180deg, rgba(0, 0, 0, .35), rgba(0, 0, 0, 0));
+      border-bottom: 1px solid var(--border);
+      z-index: 50
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 0
+    }
+
+    .nav .links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 600
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: transparent;
+      color: #fff
+    }
+
+    .btn.small {
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-weight: 600
+    }
+
+    .hero {
+      padding: 56px 0 24px
+    }
+
+    h1 {
+      font-size: clamp(28px, 4.6vw, 44px);
+      line-height: 1.1;
+      margin: 0 0 10px
+    }
+
+    h2 {
+      font-size: clamp(20px, 3.6vw, 28px);
+      margin: 24px 0 10px
+    }
+
+    h3 {
+      font-size: 18px;
+      margin: 14px 0 8px
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 12px
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px
+    }
+
+    .grid.features {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .kpi {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 14px
+    }
+
+    section {
+      padding: 28px 0
+    }
+
+    pre {
+      background: #0f0f13;
+      color: #f1f1f6;
+      border-radius: 12px;
+      padding: 14px;
+      overflow: auto;
+      border: 1px solid var(--border)
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px
+    }
+
+    .copy {
+      margin-top: 8px
+    }
+
+    .faq details {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px
+    }
+
+    .faq details+details {
+      margin-top: 10px
+    }
+
+    .faq summary {
+      cursor: pointer;
+      font-weight: 600
+    }
+
+    footer {
+      padding: 40px 0 60px;
+      border-top: 1px solid var(--border);
+      margin-top: 24px
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border)
+    }
+  </style>
+
+  <!-- Structured Data: SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "YouTube Bot",
+    "description": "A toolkit to help YouTube creators manage workflows at scale with monitoring, analytics dashboards, scheduling assistance, and comment triage.",
+    "url": "https://Appilot123.github.io/youtube-bot/",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web",
+    "softwareVersion": "1.0.0",
+    "author": { "@type": "Organization", "name": "Appilot123" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "keywords": "youtube bot, youtube automation, youtube dashboard, youtube analytics, youtube seo, youtube workflow, youtube content management, youtube monitoring tool, youtube comment management, youtube thumbnail testing, youtube title testing, youtube scheduler, youtube data api"
+  }
+  </script>
+  <!-- Structured Data: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Appilot123",
+    "url": "https://Appilot123.github.io/youtube-bot/",
+    "sameAs": [
+      "https://github.com/Appilot123/youtube-bot",
+      "https://discord.gg/vBu9huKBvy",
+      "https://t.me/devpilot1"
+    ]
+  }
+  </script>
+  <!-- Structured Data: WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://Appilot123.github.io/youtube-bot/",
+    "name": "YouTube Bot"
+  }
+  </script>
+</head>
+
+<body>
+  <a class="skip" href="#main"
+    style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Skip to content</a>
+  <header>
+    <div class="wrap nav" role="navigation" aria-label="Primary">
+      <a href="#top" class="logo" aria-label="Home">YouTube Bot</a>
+      <nav class="links" aria-label="In-page">
+        <a href="#features">Features</a>
+        <a href="#installation">Installation</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn small" href="https://github.com/Appilot123/youtube-bot" rel="nofollow noopener">View on GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section id="top" class="hero" aria-label="Hero">
+      <h1>YouTube Bot — a youtube bot workflow & analytics assistant</h1>
+      <p>
+        <strong>YouTube Bot</strong> is a ToS-compliant, human-in-the-loop toolkit that helps creators and teams manage
+        channel workflows at scale—covering monitoring, scheduling assistance, comment triage queues, thumbnail/title
+        experiments, and lightweight analytics dashboards.
+      </p>
+      <p class="muted">Built for productivity and safe experimentation. No automated likes, comments, subscriptions, or
+        views—ever.</p>
+      <p>
+        <a class="btn primary" href="https://github.com/Appilot123/youtube-bot" rel="nofollow noopener">View on
+          GitHub</a>
+        <span class="kpi" aria-label="Core Web Vitals target">LCP &lt;2.5s · CLS &lt;0.1 · INP &lt;200ms</span>
+      </p>
+      <figure>
+        <img src="/youtube-bot-dashboard.png"
+          alt="YouTube analytics dashboard preview with charts and comment triage queue" loading="lazy" width="1280"
+          height="720">
+      </figure>
+    </section>
+
+    <section id="features" aria-label="Features">
+      <h2>Features</h2>
+      <div class="grid features">
+        <article class="card">
+          <h3>Monitoring</h3>
+          <p>Track channel/videos, new uploads, and comment activity via safe integrations (e.g., YouTube Data API) with
+            configurable polling windows.</p>
+        </article>
+        <article class="card">
+          <h3>Scheduling Assistance</h3>
+          <p>Plan titles, descriptions, and release cadence. Export schedules for manual review and publishing—humans
+            approve before anything goes live.</p>
+        </article>
+        <article class="card">
+          <h3>Comment Triage</h3>
+          <p>Queue, prioritize, and label comments for faster responses. No auto-commenting—this is a reviewer workflow
+            to keep you in control.</p>
+        </article>
+        <article class="card">
+          <h3>Thumbnail & Title Experiments</h3>
+          <p>Document A/B-style experiments and compare metrics. Experiments are guidance-only and executed manually to
+            stay ToS-compliant.</p>
+        </article>
+        <article class="card">
+          <h3>Analytics Dashboards</h3>
+          <p>Lightweight views for impressions, CTR, and retention summaries to inform editorial decisions without heavy
+            dependencies.</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-label="Use Cases & Benefits">
+      <h2>Use Cases & Benefits</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Solo Creator Productivity</h3>
+          <p>Reduce context switching and keep everything from ideas to triage in one place.</p>
+        </div>
+        <div class="card">
+          <h3>Team Workflows</h3>
+          <p>Share checklists, assign priorities, and keep a predictable release cadence.</p>
+        </div>
+        <div class="card">
+          <h3>SEO Insights</h3>
+          <p>Spot trends in titles/thumbnails and track how changes align with discovery.</p>
+        </div>
+        <div class="card">
+          <h3>Content Optimization</h3>
+          <p>Run safe, manual experiments and learn quickly—without risking your channel.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="installation" aria-label="Installation Guide">
+      <h2>Installation</h2>
+      <div class="card">
+        <h3>Prerequisites</h3>
+        <ul>
+          <li>Node.js 18+ and Git</li>
+          <li>(Optional) YouTube Data API key stored in <code>.env</code></li>
+        </ul>
+        <h3>Clone & Setup</h3>
+        <pre><code id="code1">git clone https://github.com/Appilot123/youtube-bot
+cd youtube-bot
+npm install
+# or: pnpm install | yarn install</code></pre>
+        <button class="btn copy" data-copy="#code1" aria-label="Copy install commands">Copy</button>
+
+        <h3>Run Locally</h3>
+        <pre><code id="code2">npm run dev
+# open http://localhost:5173 (Vite) or the printed URL</code></pre>
+        <button class="btn copy" data-copy="#code2" aria-label="Copy run commands">Copy</button>
+
+        <h3>Build</h3>
+        <pre><code id="code3">npm run build
+# output in ./dist – deploy to GitHub Pages</code></pre>
+        <button class="btn copy" data-copy="#code3" aria-label="Copy build commands">Copy</button>
+      </div>
+    </section>
+
+    <section id="faq" class="faq" aria-label="Frequently Asked Questions">
+      <h2>FAQ</h2>
+      <details>
+        <summary aria-controls="faq1" aria-expanded="false">Does this automate likes, comments, subscriptions, or views?
+        </summary>
+        <div id="faq1" class="muted" role="region" aria-live="polite">No. The project explicitly avoids any features
+          that would violate YouTube Terms of Service. All workflows are human-in-the-loop.</div>
+      </details>
+      <details>
+        <summary aria-controls="faq2" aria-expanded="false">Where does the data come from?</summary>
+        <div id="faq2" class="muted" role="region">Primarily from the YouTube Data API and exported reports that you
+          provide. Ensure you respect API quotas and applicable policies.</div>
+      </details>
+      <details>
+        <summary aria-controls="faq3" aria-expanded="false">How do I deploy to GitHub Pages?</summary>
+        <div id="faq3" class="muted" role="region">Build the project (<code>npm run build</code>) and publish the
+          <code>dist</code> folder to the <code>gh-pages</code> branch, or enable Pages from the <em>Settings →
+            Pages</em> menu.</div>
+      </details>
+      <details>
+        <summary aria-controls="faq4" aria-expanded="false">Is there a roadmap or issue tracker?</summary>
+        <div id="faq4" class="muted" role="region">Yes—use <a href="https://github.com/Appilot123/youtube-bot/issues"
+            rel="nofollow noopener">GitHub Issues</a> to file bugs or vote on features.</div>
+      </details>
+    </section>
+
+    <section aria-label="Contact & Community">
+      <h2>Contact & Community</h2>
+      <div class="card">
+        <p>Have questions or ideas? Start a thread in <a href="https://github.com/Appilot123/youtube-bot/discussions"
+            rel="nofollow noopener">GitHub Discussions</a> or open an <a
+            href="https://github.com/Appilot123/youtube-bot/issues" rel="nofollow noopener">Issue</a>.</p>
+        <p>Community chat:
+          <a href="https://discord.gg/vBu9huKBvy" rel="nofollow noopener">Discord</a> ·
+          <a href="https://t.me/devpilot1" rel="nofollow noopener">Telegram</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="muted">© <span id="year"></span> Appilot123 — <a href="https://Appilot123.github.io/youtube-bot/"
+          rel="nofollow noopener">https://Appilot123.github.io/youtube-bot/</a></p>
+      <p class="muted">This site sets no cookies and loads no third-party scripts by default.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Accessible accordion state reflection
+    document.querySelectorAll('.faq details > summary').forEach(function (s) {
+      s.addEventListener('click', function () {
+        const open = s.parentElement.hasAttribute('open');
+        s.setAttribute('aria-expanded', String(!open));
+      });
+    });
+
+    // Copy buttons
+    function copyText(sel) {
+      const el = document.querySelector(sel);
+      if (!el) return;
+      const text = el.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const b = document.querySelector(`[data-copy="${sel}"]`);
+        if (b) {
+          const old = b.textContent; b.textContent = 'Copied!';
+          setTimeout(() => { b.textContent = old; }, 1400);
+        }
+      }).catch(() => { });
+    }
+    document.querySelectorAll('[data-copy]').forEach(function (btn) {
+      btn.addEventListener('click', function () { copyText(btn.getAttribute('data-copy')); });
+    });
+  </script>
+
+  <noscript>
+    <div class="wrap" style="margin:12px 0">
+      <p class="muted">JavaScript is disabled. Core content is visible; copy buttons and FAQ toggles require JS.</p>
+    </div>
+  </noscript>
+
+  <!-- Deployment notes:
+    1) Create /robots.txt with:
+       User-agent: *
+Allow: /
+Sitemap: https://Appilot123.github.io/youtube-bot/sitemap.xml
+    2) Create /sitemap.xml pointing to #features, #installation, #faq anchors.
+    3) Replace placeholder images at /assets/ and compress them. Ensure alt text remains descriptive.
+  -->
+</body>
+
+</html>
